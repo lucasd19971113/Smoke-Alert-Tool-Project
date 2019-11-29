@@ -31,7 +31,7 @@ long lastMeasure = 0;
 
 void setup_wifi() {
   delay(10);
-  // We start by connecting to a WiFi network
+  
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -60,7 +60,7 @@ void callback(String topic, byte* message, unsigned int length) {
 }
 
 void reconnect() {
-  // Loop until we're reconnected
+  
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     
@@ -76,9 +76,6 @@ void reconnect() {
   }
 }
 
-// The setup function sets your ESP GPIOs to Outputs, starts the serial communication at a baud rate of 115200
-// Sets your mqtt broker and sets the callback function
-// The callback function is what receives messages and actually controls the LEDs
 void setup() {
  
   Serial.begin(115200);
@@ -88,7 +85,6 @@ void setup() {
 
 }
 
-// For this project, you don't need to change anything in the loop function. Basically it ensures that you ESP is connected to your broker
 void loop() {
 
   delay(10);
@@ -101,11 +97,8 @@ void loop() {
     dtostrf(valor_analogico, 6, 2, gasTemp);
 
   now = millis();
-  // Publishes new temperature and humidity every 30 seconds
   
-    // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-   
-    dtostrf(valor_analogico, 6, 2, gasTemp);
+   dtostrf(valor_analogico, 6, 2, gasTemp);
 
     Serial.println("ANALOG VALUE: ");
 
@@ -126,7 +119,6 @@ void loop() {
     //Envia Email a cada 60 segundos se o gas for maior que 300
     if (now - lastMeasure > 60000 && valor_analogico > 300) {
     lastMeasure = now;
-    // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
       client.publish("room/notification", gasTemp);
 
       Serial.println("Email enviado: ");
