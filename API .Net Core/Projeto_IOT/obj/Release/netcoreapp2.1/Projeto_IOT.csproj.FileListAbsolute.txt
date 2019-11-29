@@ -1,0 +1,14 @@
+D:\Projeto_IOT\bin\Release\netcoreapp2.1\Projeto_IOT.deps.json
+D:\Projeto_IOT\bin\Release\netcoreapp2.1\Projeto_IOT.runtimeconfig.json
+D:\Projeto_IOT\bin\Release\netcoreapp2.1\Projeto_IOT.runtimeconfig.dev.json
+D:\Projeto_IOT\bin\Release\netcoreapp2.1\Projeto_IOT.dll
+D:\Projeto_IOT\bin\Release\netcoreapp2.1\Projeto_IOT.pdb
+D:\Projeto_IOT\obj\Release\netcoreapp2.1\Projeto_IOT.csprojAssemblyReference.cache
+D:\Projeto_IOT\obj\Release\netcoreapp2.1\Projeto_IOT.csproj.CoreCompileInputs.cache
+D:\Projeto_IOT\obj\Release\netcoreapp2.1\Projeto_IOT.RazorAssemblyInfo.cache
+D:\Projeto_IOT\obj\Release\netcoreapp2.1\Projeto_IOT.RazorAssemblyInfo.cs
+D:\Projeto_IOT\obj\Release\netcoreapp2.1\Projeto_IOT.AssemblyInfoInputs.cache
+D:\Projeto_IOT\obj\Release\netcoreapp2.1\Projeto_IOT.AssemblyInfo.cs
+D:\Projeto_IOT\obj\Release\netcoreapp2.1\Projeto_IOT.RazorTargetAssemblyInfo.cache
+D:\Projeto_IOT\obj\Release\netcoreapp2.1\Projeto_IOT.dll
+D:\Projeto_IOT\obj\Release\netcoreapp2.1\Projeto_IOT.pdb
