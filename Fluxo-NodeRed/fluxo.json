@@ -1,0 +1,433 @@
+[
+    {
+        "id": "ff4cf509.c817b8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "9a53cb7b.b6d5f8",
+        "type": "mqtt in",
+        "z": "ff4cf509.c817b8",
+        "name": "Gas Level",
+        "topic": "room/level",
+        "qos": "2",
+        "datatype": "utf8",
+        "broker": "3e115b8d.3a31e4",
+        "x": 100,
+        "y": 320,
+        "wires": [
+            [
+                "3afb926f.725c9e",
+                "304e5f59.ddefb"
+            ]
+        ]
+    },
+    {
+        "id": "358664b5.04a5cc",
+        "type": "mqtt in",
+        "z": "ff4cf509.c817b8",
+        "name": "Gas",
+        "topic": "room/sensor",
+        "qos": "2",
+        "datatype": "utf8",
+        "broker": "3e115b8d.3a31e4",
+        "x": 90,
+        "y": 240,
+        "wires": [
+            [
+                "66634b82.569d14"
+            ]
+        ]
+    },
+    {
+        "id": "66634b82.569d14",
+        "type": "ui_chart",
+        "z": "ff4cf509.c817b8",
+        "name": "",
+        "group": "b6aa01e6.369f9",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Gas",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "1000",
+        "removeOlder": "30",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "outputs": 1,
+        "x": 750,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3afb926f.725c9e",
+        "type": "ui_gauge",
+        "z": "ff4cf509.c817b8",
+        "name": "",
+        "group": "b6aa01e6.369f9",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gas Level",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 740,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "b3fc2f31.f6863",
+        "type": "debug",
+        "z": "ff4cf509.c817b8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 730,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "304e5f59.ddefb",
+        "type": "debug",
+        "z": "ff4cf509.c817b8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 270,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "d0242e52.a4a5e",
+        "type": "ui_form",
+        "z": "ff4cf509.c817b8",
+        "name": "user",
+        "label": "Cadastro de usuarios",
+        "group": "4bdd0001.40be8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Nome",
+                "value": "Nome",
+                "type": "text",
+                "required": true
+            },
+            {
+                "label": "Email",
+                "value": "Email",
+                "type": "email",
+                "required": true
+            }
+        ],
+        "formValue": {
+            "Nome": "",
+            "Email": ""
+        },
+        "payload": "",
+        "submit": "submit",
+        "cancel": "cancel",
+        "topic": "user",
+        "x": 90,
+        "y": 480,
+        "wires": [
+            [
+                "bfd1f3ae.df539",
+                "be1c2fed.5103d"
+            ]
+        ]
+    },
+    {
+        "id": "bfd1f3ae.df539",
+        "type": "debug",
+        "z": "ff4cf509.c817b8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 250,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "88aafef0.a2dd3",
+        "type": "function",
+        "z": "ff4cf509.c817b8",
+        "name": "Notify",
+        "func": "\n    var alerta = msg.payload;\n    \n    node.warn(\"Passou\"+msg.payload);\n\n    var devUrl = 'https://projetoiotsensorgas.azurewebsites.net/api/usuario/notificar';\n    \n    \n    var msg = {\n        \"method\" : \"GET\",\n        \"url\": devUrl\n    };\n    \n    return msg;\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 100,
+        "wires": [
+            [
+                "d5997661.d978b8"
+            ]
+        ]
+    },
+    {
+        "id": "be1c2fed.5103d",
+        "type": "function",
+        "z": "ff4cf509.c817b8",
+        "name": "REST POST",
+        "func": "var user = msg.payload;\n\nvar devUrl = 'https://projetoiotsensorgas.azurewebsites.net/api/usuario/adduser';\n\n\nvar msg = {\n    \"method\" : \"POST\",\n    \"url\": devUrl,\n    \"payload\":JSON.stringify(user),\n    \"headers\": {\n        \"Content-type\":\"application/json; charset=UTF-8\"\n    }\n};\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 270,
+        "y": 440,
+        "wires": [
+            [
+                "317f7bb1.896db4"
+            ]
+        ]
+    },
+    {
+        "id": "317f7bb1.896db4",
+        "type": "http request",
+        "z": "ff4cf509.c817b8",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "https://projetoiotsensorgas.azurewebsites.net/api/usuario/adduser",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 510,
+        "y": 440,
+        "wires": [
+            [
+                "5256bb4b.6770e4"
+            ]
+        ]
+    },
+    {
+        "id": "5256bb4b.6770e4",
+        "type": "debug",
+        "z": "ff4cf509.c817b8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 730,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "f50dc91f.8dc7a8",
+        "type": "function",
+        "z": "ff4cf509.c817b8",
+        "name": "Register",
+        "func": "var alerta = {\n    RegistroGas: msg.payload\n}\n\nvar devUrl = 'https://projetoiotsensorgas.azurewebsites.net/api/Alert/addalerta';\n\n\nvar msg = {\n    \"method\" : \"POST\",\n    \"url\": devUrl,\n    \"payload\":JSON.stringify(alerta),\n    \"headers\": {\n        \"Content-type\":\"application/json; charset=UTF-8\"\n    }\n};\n\nnode.warn(\"Valor: \"+msg.payload);\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "9954be20.23c7a"
+            ]
+        ]
+    },
+    {
+        "id": "9954be20.23c7a",
+        "type": "http request",
+        "z": "ff4cf509.c817b8",
+        "name": "Post Alerta",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "https://projetoiotsensorgas.azurewebsites.net/api/alert/addalerta",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 550,
+        "y": 180,
+        "wires": [
+            [
+                "449ab29a.45886c"
+            ]
+        ]
+    },
+    {
+        "id": "449ab29a.45886c",
+        "type": "debug",
+        "z": "ff4cf509.c817b8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 730,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "d5997661.d978b8",
+        "type": "http request",
+        "z": "ff4cf509.c817b8",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "https://projetoiotsensorgas.azurewebsites.net/api/usuario/notificar",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 550,
+        "y": 100,
+        "wires": [
+            [
+                "b3fc2f31.f6863"
+            ]
+        ]
+    },
+    {
+        "id": "b5f5f8c5.9c8598",
+        "type": "mqtt in",
+        "z": "ff4cf509.c817b8",
+        "name": "Gas Notification Control",
+        "topic": "room/notification",
+        "qos": "1",
+        "datatype": "utf8",
+        "broker": "3e115b8d.3a31e4",
+        "x": 140,
+        "y": 140,
+        "wires": [
+            [
+                "88aafef0.a2dd3",
+                "f50dc91f.8dc7a8",
+                "3a12a131.f1b7ae"
+            ]
+        ]
+    },
+    {
+        "id": "3a12a131.f1b7ae",
+        "type": "debug",
+        "z": "ff4cf509.c817b8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 220,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "3e115b8d.3a31e4",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "",
+        "broker": "https://test.mosquitto.org/",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "b6aa01e6.369f9",
+        "type": "ui_group",
+        "z": "",
+        "name": "sensor",
+        "tab": "3e4b0484.3c6fdc",
+        "order": 1,
+        "disp": true,
+        "width": "14",
+        "collapse": false
+    },
+    {
+        "id": "4bdd0001.40be8",
+        "type": "ui_group",
+        "z": "",
+        "name": "",
+        "tab": "b9fd44a8.bd6278",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "3e4b0484.3c6fdc",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Sensor Data",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "b9fd44a8.bd6278",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Formulario",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
