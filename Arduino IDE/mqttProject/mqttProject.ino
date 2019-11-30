@@ -1,7 +1,7 @@
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
-
+void callback(char* topic, byte* payload, unsigned int length);
 
 //const char* ssid = "AndroidAP0FBA";
 //const char* password = "popn3103";
@@ -9,18 +9,19 @@
 //char* ssid = "PPGEEC";
 //const char* password = "ppgeec#fci";
 
-//char* ssid = "aco";
-//const char* password = "1234abcd";
+char* ssid = "aco";
+const char* password = "1234abcd";
 
-char* ssid = "RNL";
-const char* password = "R4n@p3lV";
+//char* ssid = "RNL";
+//const char* password = "R4n@p3lV";
 
-const char* mqtt_server = "test.mosquitto.org";
+//const char* mqtt_server = "test.mosquitto.org";
 
-WiFiClient espClient;
-PubSubClient client(espClient);
+//WiFiClient espClient;
+//PubSubClient client(espClient);
 
 const int PinA0 = A0;
+const int PinBuzzer = D6;
 
 int gas_limit = 300;
 
@@ -29,67 +30,75 @@ int gas_limit = 300;
 long now = millis();
 long lastMeasure = 0;
 
-void setup_wifi() {
-  delay(10);
+const char* mqtt_server="test.mosquitto.org";
+WiFiClient espclient;
+PubSubClient client(mqtt_server,1883,callback,espclient);
+
+
+void setup() {
   
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
+   
+   pinMode(PinA0,INPUT);
+  
+  pinMode(PinBuzzer, OUTPUT);
+  
+  Serial.begin(115200);
+  Serial.print("connecting");
+  WiFi.begin(ssid,password);         //SSID,PASSWORD 
+  while(WiFi.status()!=WL_CONNECTED){
     delay(500);
     Serial.print(".");
   }
-  Serial.println("");
-  Serial.print("WiFi connected - ESP IP address: ");
-  Serial.println(WiFi.localIP());
-}
-
-
-void callback(String topic, byte* message, unsigned int length) {
-  Serial.print("Message arrived on topic: ");
-  Serial.print(topic);
-  Serial.print(". Message: ");
-  String messageTemp;
-  
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)message[i]);
-    messageTemp += (char)message[i];
-  }
   Serial.println();
-}
-
-void reconnect() {
   
-  while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    
-    if (client.connect("ESP8266Client")) {
-      Serial.println("connected"); 
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      
-      delay(5000);
-    }
+  reconnect();
+
+}
+
+
+void callback(char* topic,byte* payload,unsigned int length1){    
+Serial.print("message arrived[");
+Serial.print(topic);
+Serial.println("]");
+
+for(int i=0;i<length1;i++){
+  Serial.print(payload[i]); 
+  
+}
+if(payload[0]==49) digitalWrite(2,HIGH);    //ASCII VALUE OF '1' IS 49
+else if(payload[0]==50)digitalWrite(2,LOW);//ASCII VALUE OF '2' IS 50
+Serial.println();
+}
+
+
+void reconnect(){
+  while(WiFi.status()!=WL_CONNECTED){
+    delay(500);
+    Serial.print(".");
   }
+  while(!client.connected()){
+  if(client.connect("ESP8266Client123456789")){
+    Serial.println("connected");
+  }
+    else{
+      Serial.print("failed,rc=");
+      Serial.println(client.state());
+      delay(500);
+    }
+  } 
 }
 
-void setup() {
- 
-  Serial.begin(115200);
-  setup_wifi();
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
-
-}
-
+// For this project, you don't need to change anything in the loop function. Basically it ensures that you ESP is connected to your broker
 void loop() {
 
-  delay(10);
+  
+if(!client.connected()){
+      reconnect();
+    }
+    
+    client.loop();
 
-  int valor_analogico = 0;
+    int valor_analogico = 0;
 
   valor_analogico = analogRead(PinA0);
 
@@ -98,7 +107,36 @@ void loop() {
 
   now = millis();
   
-   dtostrf(valor_analogico, 6, 2, gasTemp);
+   int sub = now - lastMeasure;
+
+    //Envia Email a cada 10 segundos se o gas for maior que 300
+
+  if (valor_analogico > 300) {
+  digitalWrite(PinBuzzer, HIGH);
+  Serial.println("Tempo decorrido: ");
+  Serial.print(sub);
+    if(sub > 60000){
+      lastMeasure = now;
+      // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+
+        delay(1500);
+        Serial.println("Sending email......");
+        client.publish("room/notification", gasTemp);
+        delay(1500);
+        Serial.println("EMAIL SENT SUCCESSFULY !!!!!");
+        
+        Serial.println("Email enviado: ");
+       
+      Serial.print(valor_analogico);
+      delay(100);
+      }
+    
+    }else{
+      digitalWrite(PinBuzzer, LOW); 
+      
+     }
+   
+    dtostrf(valor_analogico, 6, 2, gasTemp);
 
     Serial.println("ANALOG VALUE: ");
 
@@ -115,26 +153,7 @@ void loop() {
     Serial.print(valor_analogico);
     
     client.publish("room/level", gasTemp);
+  
 
-    //Envia Email a cada 60 segundos se o gas for maior que 300
-    if (now - lastMeasure > 60000 && valor_analogico > 300) {
-    lastMeasure = now;
-      client.publish("room/notification", gasTemp);
-
-      Serial.println("Email enviado: ");
-    Serial.print(valor_analogico);
-    
-    }
-
-    
-
-  if (!client.connected()) {
-    reconnect();
-  }
-  if(!client.loop())
-    client.connect("ESP8266Client");
-
-
-    
     
 } 
